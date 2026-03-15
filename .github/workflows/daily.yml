@@ -1,0 +1,146 @@
+name: Daily Python Projects Generator
+
+on:
+  schedule:
+    - cron: '30 12 * * *'   # 5:30 PM PKT = 12:30 PM UTC
+    - cron: '0 13 * * *'    # 6:00 PM PKT = 1:00 PM UTC
+  workflow_dispatch:
+
+jobs:
+  project-1:
+    name: Project 1 (5:30 PM PKT)
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.schedule == '30 12 * * *' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install google-genai requests
+
+      - name: Run Project 1 Generator
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          PERSONAL_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
+        run: python project1_morning.py
+
+      - name: Send Success Email
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_PASS }}
+          subject: "✅ Project 1 Created — Run #${{ github.run_number }}"
+          to: ${{ secrets.GMAIL_USER }}
+          from: GitHub Actions <${{ secrets.GMAIL_USER }}>
+          body: |
+            ✅ Project 1 (5:30 PM PKT) created successfully!
+
+            ⏰ Time     : 5:30 PM PKT
+            🔢 Run #    : ${{ github.run_number }}
+            📋 Workflow : ${{ github.workflow }}
+
+            🔗 View new repo:
+            https://github.com/HarisAhmed83?tab=repositories
+
+            — GitHub Actions Bot
+
+      - name: Send Failure Email
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_PASS }}
+          subject: "❌ Project 1 FAILED — Run #${{ github.run_number }}"
+          to: ${{ secrets.GMAIL_USER }}
+          from: GitHub Actions <${{ secrets.GMAIL_USER }}>
+          body: |
+            ❌ Project 1 (5:30 PM PKT) FAILED!
+
+            ⏰ Time  : 5:30 PM PKT
+            🔢 Run # : ${{ github.run_number }}
+
+            🔍 Error logs:
+            https://github.com/HarisAhmed83/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}
+
+            — GitHub Actions Bot
+
+  project-2:
+    name: Project 2 (6:00 PM PKT)
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.schedule == '0 13 * * *' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install google-genai requests
+
+      - name: Run Project 2 Generator
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          PERSONAL_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
+        run: python project2_afternoon.py
+
+      - name: Send Success Email
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_PASS }}
+          subject: "✅ Project 2 Created — Run #${{ github.run_number }}"
+          to: ${{ secrets.GMAIL_USER }}
+          from: GitHub Actions <${{ secrets.GMAIL_USER }}>
+          body: |
+            ✅ Project 2 (6:00 PM PKT) created successfully!
+
+            ⏰ Time     : 6:00 PM PKT
+            🔢 Run #    : ${{ github.run_number }}
+            📋 Workflow : ${{ github.workflow }}
+
+            🔗 View new repo:
+            https://github.com/HarisAhmed83?tab=repositories
+
+            — GitHub Actions Bot
+
+      - name: Send Failure Email
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_PASS }}
+          subject: "❌ Project 2 FAILED — Run #${{ github.run_number }}"
+          to: ${{ secrets.GMAIL_USER }}
+          from: GitHub Actions <${{ secrets.GMAIL_USER }}>
+          body: |
+            ❌ Project 2 (6:00 PM PKT) FAILED!
+
+            ⏰ Time  : 6:00 PM PKT
+            🔢 Run # : ${{ github.run_number }}
+
+            🔍 Error logs:
+            https://github.com/HarisAhmed83/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}
+
+            — GitHub Actions Bot
